@@ -35,17 +35,18 @@ pip install -r requirements.txt
 python generate_sample_excel.py
 ```
 
-5. Run the app:
+5. Run the Streamlit app:
 
 ```bash
-python app.py
+streamlit run streamlit_app.py
 ```
 
-6. Open the browser at `http://127.0.0.1:5000`
+6. Open the browser at the link shown by Streamlit, usually `http://localhost:8501`
 
 ## Usage
 
-- Upload `receipt_sample_data.xlsx` or your own Excel file matching the template columns.
-- Use the admin page at `/admin` to prefill fee structures for specific Program and Semester combinations.
-- The app generates one PDF per row, using Excel-provided student details and admin-prefilled fee data.
-- If multiple receipts are created, they are downloaded as a ZIP file.
+- Upload `receipt_sample_data.xlsx` or your own Excel file with columns `Receipt Date` and `Received From`.
+- Choose School, Program, Semester, and Payment Mode before upload.
+- Preview generated receipts in the app.
+- Download a single PDF or ZIP of all receipts.
+- For advanced fee presets, use the Flask admin route at `/admin` or edit `fee_config.json`.
