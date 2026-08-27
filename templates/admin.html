@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Fee Setup</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="/static/nfsu_logo.png" alt="Logo" class="logo" />
+            <div>
+                <h1>Admin Fee Setup</h1>
+                <p>Configure the prefilled fees for each program and semester.</p>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            <section class="admin-section">
+                <form action="/admin" method="post">
+                    <div class="form-grid">
+                        <label for="program">Program</label>
+                        <input type="text" id="program" name="program" required placeholder="B.Sc. Forensic Science" />
+
+                        <label for="semester">Semester</label>
+                        <input type="text" id="semester" name="semester" required placeholder="I" />
+
+                        <label for="school_name">School Name</label>
+                        <input type="text" id="school_name" name="school_name" value="NFSU" />
+
+                        <label for="on_account_of">On Account Of</label>
+                        <input type="text" id="on_account_of" name="on_account_of" value="Course Fees" />
+                    </div>
+
+                    <div class="fee-grid">
+                        {% for item in fee_items %}
+                            <label for="{{ item }}">{{ item }}</label>
+                            <input type="number" id="{{ item }}" name="{{ item }}" step="0.01" min="0" value="0" />
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit">Save Fee Config</button>
+                </form>
+            </section>
+
+            <section class="admin-list">
+                <h2>Existing Fee Presets</h2>
+                {% for program, semesters in fee_config.items() %}
+                    {% if program != 'default' %}
+                        <div class="preset-card">
+                            <h3>{{ program }}</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Semester</th>
+                                        <th>School Name</th>
+                                        <th>On Account Of</th>
+                                        <th>Tuition Fee</th>
+                                        <th>Library Fee</th>
+                                        <th>Other Fees</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for semester, values in semesters.items() %}
+                                        <tr>
+                                            <td>{{ semester }}</td>
+                                            <td>{{ values.get('School Name') }}</td>
+                                            <td>{{ values.get('On Account Of') }}</td>
+                                            <td>{{ values.get('Tuition Fees') }}</td>
+                                            <td>{{ values.get('Library Fee') }}</td>
+                                            <td>...</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </section>
+
+            <section class="info">
+                <p>Go back to <a href="/">Receipt Generator</a> after saving program/semester fees.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

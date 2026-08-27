@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fee Receipt Generator</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="/static/nfsu_logo.png" alt="Logo" class="logo" />
+            <div>
+                <h1>Fee Receipt Generator</h1>
+                <p>Upload the Excel file and preview receipts before generating PDF downloads.</p>
+            </div>
+        </header>
+
+        <div class="top-actions">
+            <a href="/admin" class="secondary-button">Admin Fee Setup</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="upload-grid">
+                    <label for="school">School</label>
+                    <select id="school" name="school" required>
+                        <option value="">Select School</option>
+                        <option value="SCSDF">SCSDF</option>
+                        <option value="FS">FS</option>
+                    </select>
+
+                    <label for="program">Program</label>
+                    <select id="program" name="program" required>
+                        <option value="">Select Program</option>
+                    </select>
+
+                    <label for="semester">Semester</label>
+                    <select id="semester" name="semester" required>
+                        <option value="">Select Semester</option>
+                        {% for i in range(1, 11) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="mode">Mode</label>
+                    <select id="mode" name="mode" required>
+                        <option value="">Select Mode</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="D.D.">D.D.</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                    </select>
+
+                    <label for="excel_file">Excel file</label>
+                    <input type="file" id="excel_file" name="excel_file" accept=".xlsx,.xls" required />
+                </div>
+                <button type="submit">Upload and Generate</button>
+            </form>
+
+            {% if preview_rows %}
+                <section class="preview-section">
+                    <div class="preview-header">
+                        <h2>Receipt Preview</h2>
+                        <form action="/generate" method="post">
+                            <input type="hidden" name="rows_json" value="{{ rows_json }}" />
+                            <button type="submit">Generate PDF{{ 's' if receipt_count > 1 else '' }}</button>
+                        </form>
+                    </div>
+                    <div class="preview-summary">
+                        <p><strong>{{ receipt_count }}</strong> receipt{{ 's' if receipt_count > 1 else '' }} ready to generate.</p>
+                        <table class="preview-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Received From</th>
+                                    <th>Program</th>
+                                    <th>Mode</th>
+                                    <th>Semester</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in preview_rows %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ row['Received From'] }}</td>
+                                        <td>{{ row['Program'] }}</td>
+                                        <td>{{ row['Mode'] }}</td>
+                                        <td>{{ row['Semester'] }}</td>
+                                        <td>{{ row['Amount'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if preview_pdf %}
+                        <div class="pdf-preview">
+                            <iframe src="data:application/pdf;base64,{{ preview_pdf }}" title="Receipt Preview"></iframe>
+                        </div>
+                    {% endif %}
+                </section>
+            {% endif %}
+
+            <section class="info">
+                <h2>Excel template columns</h2>
+                <ul>
+                    {% for column in required_columns %}
+                        <li>{{ column }}</li>
+                    {% endfor %}
+                </ul>
+                <p>Use <strong>receipt_template.xlsx</strong> or <strong>receipt_sample_data.xlsx</strong> as a starter.</p>
+            </section>
+        </main>
+    </div>
+    <script>
+        const schoolToPrograms = {
+            SCSDF: [
+                "MSC CS",
+                "DFIS",
+                "MTech AIDS (SP. Cyber Security)",
+            ],
+            FS: [
+                "MSc FS",
+                "BSc-MSc Forensic Sciences",
+            ],
+        };
+
+        const schoolSelect = document.getElementById('school');
+        const programSelect = document.getElementById('program');
+
+        function updatePrograms() {
+            const school = schoolSelect.value;
+            programSelect.innerHTML = '<option value="">Select Program</option>';
+            if (!school || !schoolToPrograms[school]) {
+                return;
+            }
+            schoolToPrograms[school].forEach(program => {
+                const option = document.createElement('option');
+                option.value = program;
+                option.textContent = program;
+                programSelect.appendChild(option);
+            });
+        }
+
+        schoolSelect.addEventListener('change', updatePrograms);
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "default": {
+    "School Name": "National Forensic Sciences University",
+    "On Account Of": "Course Fees",
+    "Tuition Fees": 0,
+    "Library Fee": 0,
+    "Caution Money Including Library (Refundable)": 0,
+    "Registration Fee": 0,
+    "Enrollment Fee": 0,
+    "Computer Fees with internet facility (Per Semester)": 0,
+    "Semester Examination Fee": 0,
+    "Semester end Examination Transcript Fee": 0,
+    "Orientation Programme Fee": 0,
+    "Identity Card Fee": 0,
+    "Laboratory Fee": 0,
+    "Eligibility Certificate Fees": 0,
+    "Convocation Fee": 0,
+    "Student Activity Fee": 0
+  },
+  "B.Sc. Forensic Science": {
+    "I": {
+      "School Name": "NFSU",
+      "On Account Of": "Course Fees",
+      "Tuition Fees": 15000,
+      "Library Fee": 1500,
+      "Caution Money Including Library (Refundable)": 2000,
+      "Registration Fee": 500,
+      "Enrollment Fee": 500,
+      "Computer Fees with internet facility (Per Semester)": 1500,
+      "Semester Examination Fee": 800,
+      "Semester end Examination Transcript Fee": 300,
+      "Orientation Programme Fee": 250,
+      "Identity Card Fee": 400,
+      "Laboratory Fee": 350,
+      "Eligibility Certificate Fees": 200,
+      "Convocation Fee": 200,
+      "Student Activity Fee": 150
+    }
+  }
+}
