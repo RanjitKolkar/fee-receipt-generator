@@ -38,7 +38,7 @@ python generate_sample_excel.py
 5. Run the Streamlit app:
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run app.py
 ```
 
 6. Open the browser at the link shown by Streamlit, usually `http://localhost:8501`
