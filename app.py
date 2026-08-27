@@ -138,5 +138,17 @@ def main():
     st.sidebar.write("Need admin fee presets? Use the Flask admin route at /admin or edit fee_config.json directly.")
 
 
+def is_streamlit_running():
+    try:
+        from streamlit.runtime.scriptrunner import get_script_run_ctx
+        return get_script_run_ctx() is not None
+    except Exception:
+        return False
+
+
 if __name__ == "__main__":
-    main()
+    if is_streamlit_running():
+        main()
+    else:
+        print("This app must be run with Streamlit:")
+        print("    streamlit run app.py")
